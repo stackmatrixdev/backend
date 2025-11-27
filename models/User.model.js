@@ -37,6 +37,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    forgotPasswordRequestsAllowed: {
+      type: Boolean,
+      default: false,
+      select: false,
+    },
+    forgotPasswordExpires: {
+      type: Date,
+      default: null,
+      select: false,
+    },
 
     // User statistics
     stats: {
@@ -149,6 +159,30 @@ userSchema.pre("save", async function (next) {
 // Method to compare password
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Method to enable forgot password requests
+userSchema.methods.enableForgotPasswordRequests = function (ttlSeconds = 300) {
+  this.forgotPasswordRequestsAllowed = true;
+  this.forgotPasswordExpires = new Date(Date.now() + ttlSeconds * 1000);
+  return this.save();
+};
+
+userSchema.methods.isForgotPasswordAllowed = function () {
+  return (
+    !!this.forgotPasswordRequestsAllowed &&
+    !!this.forgotPasswordExpires &&
+    this.forgotPasswordExpires > new Date()
+  );
+};
+
+userSchema.methods.cleanupExpiredForgotPasswordFlag = function () {
+  if (!this.forgotPasswordRequestsAllowed) return this;
+  if (!this.forgotPasswordExpires || this.forgotPasswordExpires <= new Date()) {
+    this.forgotPasswordRequestsAllowed = false;
+    this.forgotPasswordExpires = null;
+  }
+  return this.save();
 };
 
 // Method to update average score

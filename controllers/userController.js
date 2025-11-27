@@ -1,7 +1,7 @@
 // controllers/userController.js
 
-import User from "../models/User.model";
-import { handleError, handleSuccess } from "../utils/handleResponse";
+import User from "../models/User.model.js";
+import { handleError, handleSuccess } from "../utils/handleResponse.js";
 
 class UserController {
   // Get user profile
@@ -37,7 +37,7 @@ class UserController {
     }
   }
 
-
+  
 }
 
 export default UserController;

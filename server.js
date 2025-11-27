@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { startForgotPasswordExpiryCleaner } from "./utils/expiredFlagsCleaner.js";
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,9 @@ mongoose
   })
   .then(() => console.log("✅ MongoDB Connected Successfully"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+
+// after DB connection succeeds:
+startForgotPasswordExpiryCleaner(); // runs every 60s by default
 
 // Routes
 app.use("/api/auth", authRoutes);
