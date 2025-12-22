@@ -1,14 +1,24 @@
 import express from "express";
+import AIChatController from "../controllers/aiChatController.js";
+import authenticate from "../middleware/authenticate.js";
 
 const router = express.Router();
 
-// AI Chat routes - to be implemented
-// router.post('/session', authenticate, createChatSession);
-// router.get('/sessions', authenticate, getUserChatSessions);
-// router.get('/session/:sessionId', authenticate, getChatSession);
-// router.post('/message', authenticate, sendMessage);
-// router.put('/session/:sessionId', authenticate, updateChatSession);
-// router.delete('/session/:sessionId', authenticate, deleteChatSession);
-// router.post('/session/:sessionId/feedback', authenticate, submitFeedback);
+// AI Chat routes
+router.post("/session", authenticate, AIChatController.createSession);
+router.get("/sessions", authenticate, AIChatController.getUserSessions);
+router.get("/session/:sessionId", authenticate, AIChatController.getSession);
+router.post("/message", authenticate, AIChatController.sendMessage);
+router.put("/session/:sessionId", authenticate, AIChatController.updateSession);
+router.delete(
+  "/session/:sessionId",
+  authenticate,
+  AIChatController.deleteSession
+);
+router.post(
+  "/session/:sessionId/feedback",
+  authenticate,
+  AIChatController.submitFeedback
+);
 
 export default router;

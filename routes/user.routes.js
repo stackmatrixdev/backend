@@ -6,10 +6,11 @@ import AuthController from "../controllers/authController.js";
 const router = express.Router();
 // User routes - to be implemented
 router.get("/profile", authenticate, UserController.getProfile);
+router.get("/dashboard-stats", authenticate, UserController.getDashboardStats);
 // router.get('/stats', authenticate, getUserStats);
 // router.get('/enrolled-programs', authenticate, getEnrolledPrograms);
 // router.post('/enroll/:programId', authenticate, enrollProgram);
 // router.put('/preferences', authenticate, updatePreferences);
-router.delete('/account', authenticate, AuthController.deleteAccount);
-router.put('/account', authenticate, UserController.updateProfile);
+router.delete("/account", authenticate, AuthController.deleteAccount);
+router.put("/account", authenticate, UserController.updateProfile);
 export default router;

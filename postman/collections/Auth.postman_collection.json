@@ -1,0 +1,225 @@
+{
+  "info": {
+    "_postman_id": "90610254-f464-4ac3-83c7-d9d0d48ab0c5",
+    "name": "Auth",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "id": "ff59b67e-0118-41c4-81b5-b7f5fe4c967c",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"fullname\":\"Nazmul Huda\",\n    \"email\":\"kelam40559@naqulu.com\",\n    \"password\":\"kelam40559\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/register",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "id": "d390796a-6a76-4697-9e20-3c467301c811",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"xowiv56537@idwager.com\",\n    \"password\":\"xowiv56537\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/login",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verify-OTP",
+      "id": "6af91128-95c1-4bd9-9b9f-496fe5e45f32",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"kelam40559@naqulu.com\",\n    \"otp\":\"101422\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/verify-otp",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "verify-otp"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Forgot-Password",
+      "id": "f51262a8-0248-4fc7-8c0d-026889f78904",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"xowiv56537@idwager.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/forgot-password",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "forgot-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reset-Password",
+      "id": "aee0d8d6-9645-4c7d-88f9-b7607d98057a",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"xowiv56537@idwager.com\",\n    \"newPassword\":\"sifat12345\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/reset-password",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "reset-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New-Access-Token",
+      "id": "7a0dc191-5da8-4159-990e-3b78f41c23c2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjg3YTJlYjQ4ZmYxODAyMmUwZDFmMSIsImlhdCI6MTc2NDI3NjM1MSwiZXhwIjoxNzY2ODY4MzUxfQ.JrhPb1cR7j9IbZpKNDWCQuoRNAidYIGimigBpmQbYZ4\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/auth/refresh-token",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "refresh-token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete-Account",
+      "id": "feda9f14-9c50-48f7-a636-12ba77745c5c",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjg3YTJlYjQ4ZmYxODAyMmUwZDFmMSIsImlhdCI6MTc2NDI3NjM1MSwiZXhwIjoxNzY0Mjc5OTUxfQ.64U01JpxRxwQ4UfiFfNSsuaU8KgvmSYHj9XarkyPUrQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/account",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "account"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "9e82f4a0-45f2-49f5-9e11-81b87d17bd21",
+      "key": "baseApi",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

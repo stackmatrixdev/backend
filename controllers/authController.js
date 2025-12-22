@@ -24,7 +24,7 @@ class AuthController {
         name: fullname,
         email,
         password,
-        isVerified: false,
+        isEmailVerified: false,
       });
       await newUser.save();
 
@@ -52,12 +52,14 @@ class AuthController {
   static async verifyOtp(req, res) {
     try {
       const { email, otp } = req.body;
+
+      devLog(`Verifying OTP for email: ${email}`);
+
       const user = await User.findOne({ email });
-
-      devLog(`Verifying OTP for user: ${user ? user._id : "not found"}`);
-
-      const userId = user?._id;
       if (!user) return handleError(res, 400, "User not found");
+
+      const userId = user._id;
+      devLog(`User found: ${userId}`);
 
       const record = await Otp.findOne({ user: userId }).sort({
         createdAt: -1,
@@ -79,10 +81,10 @@ class AuthController {
       if (!ok) return handleError(res, 400, "Invalid OTP");
 
       // mark user as verified
-      await User.findByIdAndUpdate(userId, { isVerified: true });
+      await User.findByIdAndUpdate(userId, { isEmailVerified: true });
 
       // mark email as verified
-      user.isVerified = true;
+      user.isEmailVerified = true;
       await user.save();
 
       // remove used otp
@@ -130,10 +132,16 @@ class AuthController {
         res,
         200,
         {
-          email: user.email,
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            avatar: user.avatar,
+            isActive: user.isActive,
+          },
           accessToken,
           refreshToken,
-          isActive: user.isActive,
         },
         "User logged in successfully"
       );

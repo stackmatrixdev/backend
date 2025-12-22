@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const quizSchema = new mongoose.Schema(
   {
@@ -137,6 +138,9 @@ quizSchema.pre("save", function (next) {
   this.questionsCount = this.questions.length;
   next();
 });
+
+// Add pagination plugin
+quizSchema.plugin(mongoosePaginate);
 
 const Quiz = mongoose.model("Quiz", quizSchema);
 

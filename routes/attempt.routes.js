@@ -1,14 +1,22 @@
 import express from "express";
+import QuizAttemptController from "../controllers/quizAttemptController.js";
+import authenticate from "../middleware/authenticate.js";
 
 const router = express.Router();
 
-// Quiz attempt routes - to be implemented
-// router.post('/start', authenticate, startQuizAttempt);
-// router.post('/:id/submit', authenticate, submitQuizAttempt);
-// router.get('/user/:userId', authenticate, getUserAttempts);
-// router.get('/:id', authenticate, getAttemptById);
-// router.get('/quiz/:quizId/attempts', authenticate, getQuizAttempts);
-// router.post('/:id/answer', authenticate, saveAnswer);
-// router.get('/:id/results', authenticate, getAttemptResults);
+// Quiz attempt routes
+router.post("/start/:programId", authenticate, QuizAttemptController.startQuiz);
+router.post(
+  "/:attemptId/submit",
+  authenticate,
+  QuizAttemptController.submitQuiz
+);
+router.get("/user", authenticate, QuizAttemptController.getUserAttempts);
+router.get("/:attemptId", authenticate, QuizAttemptController.getQuizResult);
+router.post(
+  "/:attemptId/abandon",
+  authenticate,
+  QuizAttemptController.abandonQuiz
+);
 
 export default router;

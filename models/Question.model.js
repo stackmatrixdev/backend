@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const questionSchema = new mongoose.Schema(
   {
@@ -117,6 +118,9 @@ const questionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Add pagination plugin
+questionSchema.plugin(mongoosePaginate);
 
 // Validation: Ensure at least one correct answer for MCQ
 questionSchema.pre("save", function (next) {

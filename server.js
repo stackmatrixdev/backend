@@ -20,6 +20,9 @@ import aiChatRoutes from "./routes/aiChat.routes.js";
 import instructorRoutes from "./routes/instructor.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import topicRoutes from "./routes/topic.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import fileRoutes from "./routes/file.routes.js";
 
 const app = express();
 
@@ -36,10 +39,7 @@ app.use(cookieParser());
 
 // Database Connection
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB Connected Successfully"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
@@ -49,15 +49,18 @@ startForgotPasswordExpiryCleaner(); // runs every 60s by default
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/quizzes", quizRoutes);
+app.use("/api/quiz", quizRoutes);
 app.use("/api/programs", programRoutes);
-app.use("/api/questions", questionRoutes);
+app.use("/api/question", questionRoutes);
 app.use("/api/attempts", attemptRoutes);
 app.use("/api/certificates", certificateRoutes);
 app.use("/api/ai-chat", aiChatRoutes);
 app.use("/api/instructors", instructorRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/topics", topicRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/files", fileRoutes);
 
 // Ck server running
 app.get("/", (req, res) => {

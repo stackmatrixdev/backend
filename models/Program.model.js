@@ -74,6 +74,76 @@ const programSchema = new mongoose.Schema(
       },
     ],
 
+    // Exam Simulator Configuration
+    examSimulator: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      timeLimit: {
+        type: Number,
+        default: 30, // minutes
+      },
+      totalMarks: {
+        type: Number,
+        default: 100,
+      },
+      maxAttempts: {
+        type: Number,
+        default: 3,
+      },
+      passingScore: {
+        type: Number,
+        default: 70,
+      },
+      shuffleQuestions: {
+        type: Boolean,
+        default: true,
+      },
+      shuffleOptions: {
+        type: Boolean,
+        default: true,
+      },
+      showResults: {
+        type: Boolean,
+        default: true,
+      },
+      showExplanations: {
+        type: Boolean,
+        default: true,
+      },
+      questions: [
+        {
+          questionText: {
+            type: String,
+            required: true,
+          },
+          type: {
+            type: String,
+            enum: ["single", "multiple", "true-false", "short-answer"],
+            default: "single",
+          },
+          options: [
+            {
+              text: String,
+              isCorrect: Boolean,
+            },
+          ],
+          correctAnswers: [String], // For multiple choice
+          explanation: String,
+          mark: {
+            type: Number,
+            default: 1,
+          },
+          skillLevel: {
+            type: String,
+            enum: ["easy", "medium", "hard"],
+            default: "medium",
+          },
+        },
+      ],
+    },
+
     // Documentation/Resources
     documentation: [
       {

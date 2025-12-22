@@ -1,0 +1,177 @@
+{
+  "info": {
+    "_postman_id": "ec67f223-00a5-4835-9e87-2480ad8841fa",
+    "name": "Topic",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get-Topics",
+      "id": "f8cce9a8-ab00-4f3b-9cd6-e4c3a9aed837",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseApi}}/api/topics/",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "topics",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get-Topic : id",
+      "id": "3dcf5ba6-9faa-457c-804a-ae67632d66ab",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseApi}}/api/topics/693b0c51c7e38dddfea27591",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "topics",
+            "693b0c51c7e38dddfea27591"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete - Topic : id",
+      "id": "bab9d499-2899-4011-a010-26efbb192075",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseApi}}/api/topics/693b0c51c7e38dddfea27591",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "topics",
+            "693b0c51c7e38dddfea27591"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update - Topic : id",
+      "id": "20b4dc7d-0a07-481a-8936-0fea4c66b335",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"JavaScript Fundamentals - Updated\",\n  \"description\": \"Updated description covering advanced topics and real-world applications\",\n  \"category\": \"Development\",\n  \"numberOfFreeQuestions\": 10,\n  \"chatbotPrice\": 12.99,\n  \"documentationPrice\": 6.99,\n  \"examSimulatorPrice\": 19.99,\n  \"bundlePrice\": 29.99,\n  \"overview\": \"<h1>Updated JavaScript Overview</h1><p>This course now includes advanced topics like closures, prototypes, and modern frameworks. You'll build full-stack applications and deploy them to production.</p><h2>New Features</h2><ul><li>React integration</li><li>Node.js backend</li><li>Database connections</li><li>Deployment strategies</li></ul>\",\n  \"coverImage\": \"https://example.com/images/updated-js-cover.jpg\",\n  \"status\": \"published\",\n  \"isActive\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/topics/693b0c51c7e38dddfea27591",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "topics",
+            "693b0c51c7e38dddfea27591"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create - Topic",
+      "id": "05700bee-7034-49b1-88e2-312d6700e98b",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"JavaScript Fundamentals\",\n  \"description\": \"Learn JavaScript from scratch with hands-on examples and real-world projects\",\n  \"category\": \"Development\",\n  \"numberOfFreeQuestions\": 5,\n  \"chatbotPrice\": 9.99,\n  \"documentationPrice\": 4.99,\n  \"examSimulatorPrice\": 14.99,\n  \"bundlePrice\": 24.99,\n  \"overview\": \"<h1>JavaScript Overview</h1><p>This comprehensive course covers variables, functions, objects, and modern ES6+ features. You'll build interactive web applications and understand asynchronous programming with promises and async/await.</p><h2>What You'll Learn</h2><ul><li>Basic syntax and data types</li><li>DOM manipulation</li><li>Event handling</li><li>API integration</li></ul>\",\n  \"coverImage\": \"https://example.com/images/js-fundamentals-cover.jpg\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/topics/",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "topics",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

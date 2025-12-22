@@ -1,0 +1,213 @@
+{
+  "info": {
+    "_postman_id": "353ad632-300b-4f7d-9586-5ec156c36148",
+    "name": "Program",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create-Program",
+      "id": "583a6a6e-0d5b-4a4d-a38d-ed2282fd6af5",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"JavaScript Fundamentals\",\n  \"topic\": \"Programming Basics\",\n  \"category\": \"Development\",\n  \"description\": \"Learn JavaScript from scratch\",\n  \"difficulty\": \"Beginner\",\n  \n  \"examSimulator\": {\n    \"enabled\": true,\n    \"totalMarks\": 100,\n    \"timeLimit\": 30,\n    \"maxAttempts\": 3,\n    \"questions\": [\n      {\n        \"type\": \"single-choice\",\n        \"questionText\": \"What is JavaScript?\",\n        \"mark\": 10,\n        \"skillLevel\": \"easy\",\n        \"options\": [\n          { \"key\": \"a\", \"value\": \"A programming language\" },\n          { \"key\": \"b\", \"value\": \"A coffee brand\" },\n          { \"key\": \"c\", \"value\": \"A game\" }\n        ],\n        \"correctAnswers\": [\"a\"],\n        \"explanation\": \"JavaScript is a programming language\"\n      },\n      {\n        \"type\": \"multi-choice\",\n        \"questionText\": \"Select all data types in JS\",\n        \"mark\": 15,\n        \"skillLevel\": \"medium\",\n        \"options\": [\n          { \"key\": \"a\", \"value\": \"String\" },\n          { \"key\": \"b\", \"value\": \"Number\" },\n          { \"key\": \"c\", \"value\": \"Character\" }\n        ],\n        \"correctAnswers\": [\"a\", \"b\"]\n      },\n      {\n        \"type\": \"text\",\n        \"questionText\": \"Explain hoisting in JavaScript\",\n        \"mark\": 20,\n        \"skillLevel\": \"hard\",\n        \"correctAnswers\": [\"Hoisting is JavaScript's default behavior of moving declarations to the top\"]\n      },\n      {\n        \"type\": \"fill-in-gap\",\n        \"questionText\": \"JavaScript is a _____ typed language\",\n        \"mark\": 5,\n        \"skillLevel\": \"easy\",\n        \"correctAnswers\": [\"dynamic\", \"dynamically\"]\n      }\n    ]\n  },\n  \n  \"guidedQuestions\": {\n    \"enabled\": true,\n    \"freeAttempts\": 5,\n    \"questions\": [\n      {\n        \"question\": \"How do you declare a variable in JS?\",\n        \"answer\": \"Use let, const, or var keyword\"\n      },\n      {\n        \"question\": \"What is the difference between let and const?\",\n        \"answer\": \"let can be reassigned, const cannot\"\n      }\n    ]\n  },\n  \n  \"documents\": [\n    {\n      \"title\": \"JavaScript Cheat Sheet\",\n      \"description\": \"Quick reference guide\",\n      \"fileUrl\": \"https://example.com/docs/js-cheatsheet.pdf\",\n      \"fileType\": \"pdf\"\n    }\n  ],\n  \n  \"settings\": {\n    \"shuffleQuestions\": true,\n    \"isActive\": true,\n    \"isPaid\": false,\n    \"price\": 0\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get-All-Program",
+      "id": "9f10cfaa-ab38-4abb-a53c-e68b6c964665",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get-Program : id",
+      "id": "e025bcc6-7b0b-498f-8bde-50e35ef057eb",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939f3380450fed88651a5a8",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939f3380450fed88651a5a8"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update-Program : id",
+      "id": "b2d29005-2168-4fe4-a98c-9e35b1ab778c",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"JavaScript Fundamentals - Updated\",\n  \"topic\": \"Programming Basics\",\n  \"category\": \"Development\",\n  \"description\": \"Updated course description and learning outcomes.\",\n  \"difficulty\": \"Intermediate\",\n  \"thumbnail\": \"https://cdn.example.com/thumb.jpg\",\n  \"coverImage\": \"https://cdn.example.com/cover.jpg\",\n  \"status\": \"published\",\n  \"estimatedDuration\": 12,\n\n  \"settings\": {\n    \"shuffleQuestions\": true,\n    \"isActive\": true,\n    \"isPaid\": true,\n    \"price\": 19.99\n  },\n\n  \"examSimulator\": {\n    \"enabled\": true,\n    \"totalMarks\": 100,\n    \"timeLimit\": 45,\n    \"maxAttempts\": 3,\n    \"questions\": [\n      {\n        \"type\": \"single-choice\",\n        \"questionText\": \"What is JavaScript?\",\n        \"mark\": 10,\n        \"skillLevel\": \"easy\",\n        \"options\": [\n          { \"key\": \"a\", \"value\": \"A programming language\" },\n          { \"key\": \"b\", \"value\": \"A coffee brand\" },\n          { \"key\": \"c\", \"value\": \"A game\" }\n        ],\n        \"correctAnswers\": [\"a\"],\n        \"explanation\": \"JavaScript is a programming language\"\n      },\n      {\n        \"type\": \"multi-choice\",\n        \"questionText\": \"Select primitive types in JS\",\n        \"mark\": 15,\n        \"skillLevel\": \"medium\",\n        \"options\": [\n          { \"key\": \"a\", \"value\": \"String\" },\n          { \"key\": \"b\", \"value\": \"Object\" },\n          { \"key\": \"c\", \"value\": \"Number\" }\n        ],\n        \"correctAnswers\": [\"a\", \"c\"]\n      },\n      {\n        \"type\": \"text\",\n        \"questionText\": \"Explain hoisting in JavaScript\",\n        \"mark\": 20,\n        \"skillLevel\": \"hard\",\n        \"correctAnswers\": [\n          \"Hoisting moves declarations to the top of their scope\"\n        ]\n      },\n      {\n        \"type\": \"fill-in-gap\",\n        \"questionText\": \"JavaScript is a _____ typed language\",\n        \"mark\": 5,\n        \"skillLevel\": \"easy\",\n        \"correctAnswers\": [\"dynamic\", \"dynamically\"]\n      }\n    ]\n  },\n\n  \"guidedQuestions\": {\n    \"enabled\": true,\n    \"freeAttempts\": 5,\n    \"questions\": [\n      { \"question\": \"How do you declare a variable in JS?\", \"answer\": \"Use let, const, or var\" },\n      { \"question\": \"What is the difference between let and const?\", \"answer\": \"let can be reassigned, const cannot\" }\n    ]\n  },\n\n  \"documentation\": [\n    {\n      \"title\": \"JavaScript Cheat Sheet\",\n      \"description\": \"Quick reference guide\",\n      \"fileUrl\": \"https://example.com/docs/js-cheatsheet.pdf\",\n      \"fileType\": \"pdf\"\n    }\n  ],\n\n  \"pricing\": {\n    \"isFree\": false,\n    \"price\": 19.99,\n    \"currency\": \"CAD\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939d622dd1eaab46e6815c3",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939d622dd1eaab46e6815c3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Program : id",
+      "id": "cf1a45e1-415f-4757-9c88-b8a90f129524",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "/api/programs/6939d622dd1eaab46e6815c3",
+          "path": [
+            "api",
+            "programs",
+            "6939d622dd1eaab46e6815c3"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "915bfb35-30c4-49af-af7b-a2cc7c6935cb",
+      "key": "token",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

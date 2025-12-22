@@ -1,0 +1,228 @@
+{
+  "info": {
+    "_postman_id": "5f674231-5464-4748-b51c-c0b388e4ac02",
+    "name": "User",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get-User Details",
+      "id": "0e8599df-60cb-49cf-8e29-1fc922be6cd5",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/profile",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Status-User Details",
+      "id": "2f82aa90-86ff-4e7f-8832-801b6b9d8f90",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/stats",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ai-interaction-User",
+      "id": "f7319f18-5fe1-48a6-b3af-1885a4b1be53",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/ai-interaction",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "ai-interaction"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update-Profile image",
+      "id": "1e8ff970-35cb-46d6-83e4-99f1e94e5eaf",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "profileImage",
+              "type": "file",
+              "src": "postman-cloud:///1f0d6c2c-11c4-4420-bdab-3091c97ea0d4"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/profile/image",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "profile",
+            "image"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete-Profile image",
+      "id": "0af0bc77-e499-458a-8d23-048fd320d5ea",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseApi}}/api/users/profile/image",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "profile",
+            "image"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update-Profile",
+      "id": "145a8cae-eba6-4f86-b3ec-d5d0e6579eaa",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"email\": \"newemail@gmail.com\",\n  \"password\": \"newpassword123\",\n  \"confirmPassword\": \"newpassword123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/users/profile",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

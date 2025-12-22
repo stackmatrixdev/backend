@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .error {
+            background: #ffe6e6;
+            color: #d32f2f;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>File Upload System Test</h1>
+    
+    <div class="upload-section">
+        <h3>Upload Document</h3>
+        <input type="file" id="documentFile" accept=".pdf,.doc,.docx,.txt,.md">
+        <br>
+        <label for="title">Title:</label>
+        <input type="text" id="title" placeholder="Document title" style="width: 200px; margin: 5px;">
+        <br>
+        <label for="description">Description:</label>
+        <input type="text" id="description" placeholder="Document description" style="width: 300px; margin: 5px;">
+        <br>
+        <button onclick="uploadDocument()">Upload Document</button>
+        <div id="documentResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="upload-section">
+        <h3>Upload Profile Picture</h3>
+        <input type="file" id="profileFile" accept="image/*">
+        <br>
+        <button onclick="uploadProfile()">Upload Profile</button>
+        <div id="profileResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="upload-section">
+        <h3>Create Training with Exam Simulator</h3>
+        <form id="trainingForm">
+            <label>Quiz Title: <input type="text" id="quizTitle" placeholder="Training Title" required></label><br><br>
+            <label>Topic: 
+                <select id="topic" required>
+                    <option value="">Select Topic</option>
+                    <option value="Tech & Development">Tech & Development</option>
+                    <option value="Project Management">Project Management</option>
+                    <option value="Office Tools">Office Tools</option>
+                </select>
+            </label><br><br>
+            <label>Category: 
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Development">Development</option>
+                    <option value="Business">Business</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Music">Music</option>
+                    <option value="Design">Design</option>
+                    <option value="Academics">Academics</option>
+                    <option value="Health & Fitness">Health & Fitness</option>
+                    <option value="Productivity">Productivity</option>
+                    <option value="Accounting">Accounting</option>
+                </select>
+            </label><br><br>
+            <label>Description: <textarea id="trainingDescription" placeholder="Training Description" required></textarea></label><br><br>
+            <label>Time Limit (minutes): <input type="number" id="timeLimit" value="30" min="1"></label><br><br>
+            <label>Max Attempts: <input type="number" id="maxAttempts" value="3" min="1"></label><br><br>
+            <label>Passing Score (%): <input type="number" id="passingScore" value="70" min="0" max="100"></label><br><br>
+            
+            <h4>Questions:</h4>
+            <div id="questionsList"></div>
+            <button type="button" onclick="addQuestion()">Add Question</button><br><br>
+            
+            <button type="button" onclick="createTraining()">Create Training</button>
+        </form>
+        <div id="trainingResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let questions = [];
+        let questionCounter = 0;
+
+        // Mock auth token (in real app, this would come from login)
+        const mockAuthToken = 'your-auth-token-here'; // You'll need to replace this with a real token
+
+        async function makeAuthenticatedRequest(url, options = {}) {
+            return fetch(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'Authorization': `Bearer ${mockAuthToken}`
+                }
+            });
+        }
+
+        async function uploadDocument() {
+            const fileInput = document.getElementById('documentFile');
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const resultDiv = document.getElementById('documentResult');
+
+            if (!fileInput.files[0]) {
+                showResult(resultDiv, 'Please select a file', false);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+            formData.append('metadata', JSON.stringify({ title, description }));
+
+            try {
+                const response = await makeAuthenticatedRequest(`${API_BASE}/files/upload-document`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, `Document uploaded successfully! ID: ${result.data.id}`, true);
+                } else {
+                    showResult(resultDiv, `Error: ${result.message}`, false);
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, false);
+            }
+        }
+
+        async function uploadProfile() {
+            const fileInput = document.getElementById('profileFile');
+            const resultDiv = document.getElementById('profileResult');
+
+            if (!fileInput.files[0]) {
+                showResult(resultDiv, 'Please select a file', false);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('profile', fileInput.files[0]);
+
+            try {
+                const response = await makeAuthenticatedRequest(`${API_BASE}/files/upload-profile`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, `Profile uploaded successfully! URL: ${result.data.url}`, true);
+                } else {
+                    showResult(resultDiv, `Error: ${result.message}`, false);
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, false);
+            }
+        }
+
+        function addQuestion() {
+            questionCounter++;
+            const questionDiv = document.createElement('div');
+            questionDiv.style.marginBottom = '20px';
+            questionDiv.style.padding = '15px';
+            questionDiv.style.border = '1px solid #ddd';
+            questionDiv.style.borderRadius = '5px';
+            
+            questionDiv.innerHTML = `
+                <h5>Question ${questionCounter}</h5>
+                <label>Question Text: <input type="text" id="question_${questionCounter}" placeholder="Enter question" required style="width: 100%; margin: 5px 0;"></label><br>
+                <label>Option A: <input type="text" id="option_${questionCounter}_0" placeholder="Option A" required style="width: 200px; margin: 5px;"></label><br>
+                <label>Option B: <input type="text" id="option_${questionCounter}_1" placeholder="Option B" required style="width: 200px; margin: 5px;"></label><br>
+                <label>Option C: <input type="text" id="option_${questionCounter}_2" placeholder="Option C" required style="width: 200px; margin: 5px;"></label><br>
+                <label>Option D: <input type="text" id="option_${questionCounter}_3" placeholder="Option D" required style="width: 200px; margin: 5px;"></label><br>
+                <label>Correct Answer: 
+                    <select id="correct_${questionCounter}" required>
+                        <option value="0">A</option>
+                        <option value="1">B</option>
+                        <option value="2">C</option>
+                        <option value="3">D</option>
+                    </select>
+                </label><br>
+                <button type="button" onclick="removeQuestion(this, ${questionCounter})" style="background: #dc3545;">Remove Question</button>
+            `;
+            
+            document.getElementById('questionsList').appendChild(questionDiv);
+        }
+
+        function removeQuestion(button, questionId) {
+            button.parentElement.remove();
+        }
+
+        async function createTraining() {
+            const resultDiv = document.getElementById('trainingResult');
+            
+            // Collect form data
+            const quizTitle = document.getElementById('quizTitle').value;
+            const topic = document.getElementById('topic').value;
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('trainingDescription').value;
+            const timeLimit = parseInt(document.getElementById('timeLimit').value);
+            const maxAttempts = parseInt(document.getElementById('maxAttempts').value);
+            const passingScore = parseInt(document.getElementById('passingScore').value);
+
+            // Collect questions
+            const questions = [];
+            for (let i = 1; i <= questionCounter; i++) {
+                const questionInput = document.getElementById(`question_${i}`);
+                if (questionInput) {
+                    const question = {
+                        text: questionInput.value,
+                        type: "Single Choice MCQ",
+                        marks: 3,
+                        level: "Beginner",
+                        options: [
+                            document.getElementById(`option_${i}_0`).value,
+                            document.getElementById(`option_${i}_1`).value,
+                            document.getElementById(`option_${i}_2`).value,
+                            document.getElementById(`option_${i}_3`).value
+                        ],
+                        correctAnswer: parseInt(document.getElementById(`correct_${i}`).value)
+                    };
+                    questions.push(question);
+                }
+            }
+
+            if (questions.length === 0) {
+                showResult(resultDiv, 'Please add at least one question', false);
+                return;
+            }
+
+            const requestData = {
+                programData: {
+                    name: quizTitle,
+                    topic,
+                    category,
+                    description,
+                    level: "Beginner",
+                    estimatedDuration: timeLimit
+                },
+                examSimulator: {
+                    questions,
+                    timeLimit,
+                    passingScore,
+                    maxAttempts,
+                    showCorrectAnswers: true,
+                    allowReview: true
+                }
+            };
+
+            try {
+                const response = await makeAuthenticatedRequest(`${API_BASE}/quiz/program-with-quiz`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, `Training created successfully! Program ID: ${result.data.program._id}`, true);
+                    document.getElementById('trainingForm').reset();
+                    document.getElementById('questionsList').innerHTML = '';
+                    questionCounter = 0;
+                } else {
+                    showResult(resultDiv, `Error: ${result.message}`, false);
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, false);
+            }
+        }
+
+        function showResult(element, message, isSuccess) {
+            element.style.display = 'block';
+            element.textContent = message;
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+        }
+
+        // Add initial question
+        addQuestion();
+    </script>
+</body>
+</html>

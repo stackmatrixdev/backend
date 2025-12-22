@@ -1,0 +1,250 @@
+{
+  "info": {
+    "_postman_id": "4e1d7909-5ee8-4475-8ba8-1008099449db",
+    "name": "Quiz",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Quiz Preview",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d394e19c-7fe8-40f0-82b1-123162b4e526",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "916229c5-62ef-4c8f-8d5c-90355a0ab1c8",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939f3380450fed88651a5a8/quiz/preview",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939f3380450fed88651a5a8",
+            "quiz",
+            "preview"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Quiz under a specific program : program-Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d394e19c-7fe8-40f0-82b1-123162b4e526",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "9dbd2e71-c76c-43f0-b2b4-027f4cf8cca4",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"type\": \"multi-choice\",\n    \"questionText\": \"What is 2 + 2?\",\n    \"mark\": 1,\n    \"skillLevel\": \"easy\",\n    \"options\": [\n        { \"key\": \"a\", \"value\": \"3\" },\n        { \"key\": \"b\", \"value\": \"4\" },\n        { \"key\": \"c\", \"value\": \"5\" }\n    ],\n    \"correctAnswers\": [\"b\"],\n    \"explanation\": \"Basic arithmetic\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939f3380450fed88651a5a8/questions",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939f3380450fed88651a5a8",
+            "questions"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Quiz under a specific program : program-Id : question-id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d394e19c-7fe8-40f0-82b1-123162b4e526",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "5ae915cb-276a-450d-bd2c-86ae3e0e1a7e",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"type\": \"multi-choice\",\n    \"questionText\": \"What is 2 + 2?\",\n    \"mark\": 1,\n    \"skillLevel\": \"easy\",\n    \"options\": [\n        { \"key\": \"a\", \"value\": \"3\" },\n        { \"key\": \"b\", \"value\": \"4\" },\n        { \"key\": \"c\", \"value\": \"5\" }\n    ],\n    \"correctAnswers\": [\"b\"],\n    \"explanation\": \"Basic arithmetic\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939f3380450fed88651a5a8/questions/6939fa215622c56953bce224",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939f3380450fed88651a5a8",
+            "questions",
+            "6939fa215622c56953bce224"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete All Quiz of a Program : program-Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "35ae1123-91fa-4489-b250-554ef86300d7",
+            "exec": [
+              "pm.test(\"Successful DELETE request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "8a94903c-9e45-4da6-9bff-9d03d047cccc",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseApi}}/api/programs/6939f3380450fed88651a5a8/quiz",
+          "host": [
+            "{{baseApi}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "6939f3380450fed88651a5a8",
+            "quiz"
+          ]
+        },
+        "description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "1ee2ffbb-02d5-4a81-a6d9-c2273be0b3e0",
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "b7502c07-8038-45db-817f-924d1f13118a",
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

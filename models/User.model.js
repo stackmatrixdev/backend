@@ -63,6 +63,20 @@ const userSchema = new mongoose.Schema(
       monthlyQuizGoal: { type: Number, default: 10 }, // quizzes
     },
 
+    // Achievements
+    achievements: [
+      {
+        title: String,
+        description: String,
+        category: String,
+        icon: String,
+        earnedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
     // Progress tracking
     enrolledPrograms: [
       {
@@ -186,12 +200,59 @@ userSchema.methods.cleanupExpiredForgotPasswordFlag = function () {
 };
 
 // Method to update average score
-userSchema.methods.updateAverageScore = function () {
+userSchema.methods.updateAverageScore = function (newPercentage) {
+  // If percentage is provided, add it to total and recalculate
+  if (newPercentage !== undefined) {
+    this.stats.totalScore = (this.stats.totalScore || 0) + newPercentage;
+  }
+
   if (this.stats.quizzesCompleted > 0) {
     this.stats.averageScore = Math.round(
       this.stats.totalScore / this.stats.quizzesCompleted
     );
   }
+};
+
+// Method to add quiz result
+userSchema.methods.addQuizResult = function (quizData) {
+  // You can extend this to store recent quiz results if needed
+  // For now, we'll just ensure stats are updated
+  if (quizData.percentage) {
+    this.stats.totalScore = (this.stats.totalScore || 0) + quizData.percentage;
+  }
+};
+
+// Method to add achievement
+userSchema.methods.addAchievement = function (achievement) {
+  // Initialize achievements array if it doesn't exist
+  if (!this.achievements) {
+    this.achievements = [];
+  }
+
+  // Add the new achievement
+  this.achievements.push({
+    title: achievement.title,
+    description: achievement.description,
+    category: achievement.category,
+    icon: achievement.icon,
+    earnedAt: new Date(),
+  });
+};
+
+// Static method to clear expired forgot password flags
+userSchema.statics.clearExpiredForgotPasswordFlags = async function () {
+  return this.updateMany(
+    {
+      forgotPasswordRequestsAllowed: true,
+      forgotPasswordExpires: { $lte: new Date() },
+    },
+    {
+      $set: {
+        forgotPasswordRequestsAllowed: false,
+        forgotPasswordExpires: null,
+      },
+    }
+  );
 };
 
 const User = mongoose.model("User", userSchema);
