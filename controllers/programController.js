@@ -1,6 +1,7 @@
 // Everything releted -- Learning Program ---
 
 import Program from "../models/Program.model.js";
+import Category from "../models/Category.model.js";
 import User from "../models/User.model.js";
 import { handleError, handleSuccess } from "../utils/handleResponse.js";
 import { devLog } from "../utils/helper.js";
@@ -334,12 +335,18 @@ class ProgramController {
         "thumbnail",
         "coverImage",
         "status",
+        "isActive",
         "estimatedDuration",
         "settings",
         "examSimulator",
         "guidedQuestions",
         "documentation",
         "pricing",
+        "overview",
+        "topicsCovered",
+        "courseSections",
+        "learningObjectives",
+        "prerequisites",
       ];
 
       Object.keys(updates).forEach((key) => {
@@ -849,6 +856,64 @@ class ProgramController {
     } catch (error) {
       console.error("Add question error:", error);
       return handleError(res, 500, "Failed to add question", error);
+    }
+  }
+
+  // Get available categories from database
+  static async getCategories(req, res) {
+    try {
+      // Fetch all active categories from database
+      const categories = await Category.find({ isActive: true }).sort({ name: 1 });
+      
+      // Extract just the names
+      const categoryNames = categories.map(cat => cat.name);
+      
+      return handleSuccess(res, 200, {
+        categories: categoryNames
+      }, "Categories retrieved successfully");
+    } catch (error) {
+      console.error("Get categories error:", error);
+      return handleError(res, 500, "Failed to get categories", error);
+    }
+  }
+
+  // Add a new category to database
+  static async addCategory(req, res) {
+    try {
+      const { category } = req.body;
+
+      if (!category || !category.trim()) {
+        return handleError(res, 400, "Category name is required");
+      }
+
+      const categoryName = category.trim();
+
+      // Check if category already exists (case-insensitive)
+      const existingCategory = await Category.findOne({
+        name: { $regex: new RegExp(`^${categoryName}$`, 'i') }
+      });
+
+      if (existingCategory) {
+        return handleError(res, 400, "Category already exists");
+      }
+
+      // Create new category
+      const newCategory = await Category.create({
+        name: categoryName,
+        createdBy: req.user.id
+      });
+
+      // Get all categories
+      const allCategories = await Category.find({ isActive: true }).sort({ name: 1 });
+      const categoryNames = allCategories.map(cat => cat.name);
+
+      return handleSuccess(res, 201, {
+        category: newCategory.name,
+        allCategories: categoryNames
+      }, "Category added successfully");
+    } catch (error) {
+      console.error("Add category error:", error);
+      return handleError(res, 500, "Failed to add category", error);
     }
   }
 

@@ -316,25 +316,39 @@ class QuizController {
       const {
         programData,
         examSimulator,
+        guidedQuestions,
       } = req.body;
 
       const userId = req.user.id;
 
-      // Create program with exam simulator
-      const program = new Program({
+      // Build program data object
+      const programToCreate = {
         ...programData,
-        examSimulator,
-      });
+        createdBy: userId, // Add the user who created the program
+      };
+
+      // Add exam simulator if provided
+      if (examSimulator) {
+        programToCreate.examSimulator = examSimulator;
+      }
+
+      // Add guided questions if provided
+      if (guidedQuestions) {
+        programToCreate.guidedQuestions = guidedQuestions;
+      }
+
+      // Create program with exam simulator and/or guided questions
+      const program = new Program(programToCreate);
 
       await program.save();
 
-      devLog(`Program with exam simulator created: ${program._id} by user: ${userId}`);
+      devLog(`Program created: ${program._id} by user: ${userId}`);
 
       return handleSuccess(
         res,
         201,
         program,
-        "Program with exam simulator created successfully"
+        "Program created successfully"
       );
     } catch (error) {
       devLog(`Create program with quiz error: ${error.message}`);

@@ -6,7 +6,7 @@ const programSchema = new mongoose.Schema(
       type: String,
       required: [true, "Program name is required"],
       trim: true,
-      unique: true,
+      // Removed unique constraint to allow multiple programs with similar names
     },
     topic: {
       type: String,
@@ -21,18 +21,7 @@ const programSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: [
-        "Development",
-        "Business",
-        "Marketing",
-        "Lifestyle",
-        "Music",
-        "Design",
-        "Academics",
-        "Health & Fitness",
-        "Productivity",
-        "Accounting",
-      ],
+      trim: true,
     },
     difficulty: {
       type: String,
@@ -53,7 +42,7 @@ const programSchema = new mongoose.Schema(
     // Program content
     overview: {
       type: String,
-      maxlength: 2000,
+      maxlength: 5000, // Increased for detailed descriptions
     },
     learningObjectives: [
       {
@@ -61,6 +50,26 @@ const programSchema = new mongoose.Schema(
       },
     ],
     prerequisites: [
+      {
+        type: String,
+      },
+    ],
+    
+    // Course Sections (for detailed course structure)
+    courseSections: [
+      {
+        title: {
+          type: String,
+          required: true,
+        },
+        description: String,
+        topics: [String], // List of topics covered in this section
+        order: Number,
+      },
+    ],
+    
+    // Topics Covered (high-level bullet points)
+    topicsCovered: [
       {
         type: String,
       },
@@ -137,8 +146,32 @@ const programSchema = new mongoose.Schema(
           },
           skillLevel: {
             type: String,
-            enum: ["easy", "medium", "hard"],
-            default: "medium",
+            enum: ["Beginner", "Intermediate", "Advanced"],
+            default: "Beginner",
+          },
+        },
+      ],
+    },
+
+    // Guided Questions Configuration
+    guidedQuestions: {
+      enabled: {
+        type: Boolean,
+        default: false,
+      },
+      freeAttempts: {
+        type: Number,
+        default: 3,
+      },
+      questions: [
+        {
+          question: {
+            type: String,
+            required: true,
+          },
+          answer: {
+            type: String,
+            required: true,
           },
         },
       ],
@@ -193,6 +226,13 @@ const programSchema = new mongoose.Schema(
       ref: "Instructor",
     },
 
+    // Created By (User who created the program)
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false, // Optional field, can be set later if needed
+    },
+
     // Pricing (if premium)
     pricing: {
       isFree: {
@@ -213,7 +253,7 @@ const programSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["draft", "published", "archived"],
-      default: "draft",
+      default: "published", // Changed to published so new trainings appear immediately
     },
     isActive: {
       type: Boolean,

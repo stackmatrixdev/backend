@@ -16,18 +16,7 @@ const topicSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: [
-        "Development",
-        "Business",
-        "Marketing",
-        "Lifestyle",
-        "Music",
-        "Design",
-        "Academics",
-        "Health & Fitness",
-        "Productivity",
-        "Accounting",
-      ],
+      trim: true,
     },
     numberOfFreeQuestions: {
       type: Number,
