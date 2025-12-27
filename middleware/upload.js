@@ -47,7 +47,7 @@ const profileFileFilter = (req, file, cb) => {
   const extname = allowedTypes.test(
     path.extname(file.originalname).toLowerCase()
   );
-  const mimetype = file.mimetype.startsWith('image/');
+  const mimetype = file.mimetype.startsWith("image/");
 
   if (mimetype && extname) {
     return cb(null, true);
@@ -66,7 +66,11 @@ const documentFileFilter = (req, file, cb) => {
   if (extname) {
     return cb(null, true);
   } else {
-    cb(new Error("File type not allowed. Allowed types: pdf, doc, docx, txt, md, ppt, pptx, xls, xlsx, mp4, avi, mov"));
+    cb(
+      new Error(
+        "File type not allowed. Allowed types: pdf, doc, docx, txt, md, ppt, pptx, xls, xlsx, mp4, avi, mov"
+      )
+    );
   }
 };
 

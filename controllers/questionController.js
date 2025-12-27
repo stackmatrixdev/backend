@@ -79,7 +79,12 @@ class QuestionController {
         return handleError(res, 404, "Question not found");
       }
 
-      return handleSuccess(res, 200, question, "Question retrieved successfully");
+      return handleSuccess(
+        res,
+        200,
+        question,
+        "Question retrieved successfully"
+      );
     } catch (error) {
       devLog(`Get question by ID error: ${error.message}`);
       return handleError(res, 500, "Failed to retrieve question", error);
@@ -169,7 +174,10 @@ class QuestionController {
       }
 
       // Check if user has permission to update
-      if (question.createdBy.toString() !== userId && req.user.role !== "admin") {
+      if (
+        question.createdBy.toString() !== userId &&
+        req.user.role !== "admin"
+      ) {
         return handleError(res, 403, "Not authorized to update this question");
       }
 
@@ -182,7 +190,12 @@ class QuestionController {
 
       devLog(`Question updated: ${id} by user: ${userId}`);
 
-      return handleSuccess(res, 200, updatedQuestion, "Question updated successfully");
+      return handleSuccess(
+        res,
+        200,
+        updatedQuestion,
+        "Question updated successfully"
+      );
     } catch (error) {
       devLog(`Update question error: ${error.message}`);
       return handleError(res, 500, "Failed to update question", error);
@@ -201,7 +214,10 @@ class QuestionController {
       }
 
       // Check if user has permission to delete
-      if (question.createdBy.toString() !== userId && req.user.role !== "admin") {
+      if (
+        question.createdBy.toString() !== userId &&
+        req.user.role !== "admin"
+      ) {
         return handleError(res, 403, "Not authorized to delete this question");
       }
 
@@ -255,7 +271,9 @@ class QuestionController {
         });
       }
 
-      devLog(`Bulk created ${createdQuestions.length} questions by user: ${userId}`);
+      devLog(
+        `Bulk created ${createdQuestions.length} questions by user: ${userId}`
+      );
 
       return handleSuccess(
         res,
@@ -277,7 +295,7 @@ class QuestionController {
 
       // Get questions to check ownership
       const questions = await Question.find({ _id: { $in: questionIds } });
-      
+
       // Check if user has permission to delete all questions
       const unauthorizedQuestions = questions.filter(
         (q) => q.createdBy.toString() !== userId && req.user.role !== "admin"
@@ -288,7 +306,9 @@ class QuestionController {
       }
 
       // Remove questions from their quizzes
-      const quizIds = [...new Set(questions.map((q) => q.quiz).filter(Boolean))];
+      const quizIds = [
+        ...new Set(questions.map((q) => q.quiz).filter(Boolean)),
+      ];
       await Promise.all(
         quizIds.map((quizId) =>
           Quiz.findByIdAndUpdate(quizId, {
@@ -300,7 +320,9 @@ class QuestionController {
       // Delete the questions
       const result = await Question.deleteMany({ _id: { $in: questionIds } });
 
-      devLog(`Bulk deleted ${result.deletedCount} questions by user: ${userId}`);
+      devLog(
+        `Bulk deleted ${result.deletedCount} questions by user: ${userId}`
+      );
 
       return handleSuccess(
         res,
@@ -320,7 +342,9 @@ class QuestionController {
       const { quizId } = req.params;
       const { includeAnswers = false } = req.query;
 
-      const questions = await Question.find({ quiz: quizId }).sort({ createdAt: 1 });
+      const questions = await Question.find({ quiz: quizId }).sort({
+        createdAt: 1,
+      });
 
       // If not admin and includeAnswers not requested, hide correct answers
       const isAdmin = req.user?.role === "admin";
@@ -328,7 +352,7 @@ class QuestionController {
 
       const formattedQuestions = questions.map((q) => {
         const questionObj = q.toObject();
-        
+
         if (!shouldIncludeAnswers) {
           delete questionObj.correctAnswer;
           if (questionObj.options) {
@@ -338,7 +362,7 @@ class QuestionController {
             }));
           }
         }
-        
+
         return questionObj;
       });
 
@@ -427,7 +451,11 @@ class QuestionController {
       });
 
       if (questions.length !== questionIds.length) {
-        return handleError(res, 400, "Some questions are not available or already assigned");
+        return handleError(
+          res,
+          400,
+          "Some questions are not available or already assigned"
+        );
       }
 
       // Add questions to quiz

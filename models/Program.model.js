@@ -54,7 +54,7 @@ const programSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    
+
     // Course Sections (for detailed course structure)
     courseSections: [
       {
@@ -67,7 +67,7 @@ const programSchema = new mongoose.Schema(
         order: Number,
       },
     ],
-    
+
     // Topics Covered (high-level bullet points)
     topicsCovered: [
       {

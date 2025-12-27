@@ -863,14 +863,21 @@ class ProgramController {
   static async getCategories(req, res) {
     try {
       // Fetch all active categories from database
-      const categories = await Category.find({ isActive: true }).sort({ name: 1 });
-      
+      const categories = await Category.find({ isActive: true }).sort({
+        name: 1,
+      });
+
       // Extract just the names
-      const categoryNames = categories.map(cat => cat.name);
-      
-      return handleSuccess(res, 200, {
-        categories: categoryNames
-      }, "Categories retrieved successfully");
+      const categoryNames = categories.map((cat) => cat.name);
+
+      return handleSuccess(
+        res,
+        200,
+        {
+          categories: categoryNames,
+        },
+        "Categories retrieved successfully"
+      );
     } catch (error) {
       console.error("Get categories error:", error);
       return handleError(res, 500, "Failed to get categories", error);
@@ -890,7 +897,7 @@ class ProgramController {
 
       // Check if category already exists (case-insensitive)
       const existingCategory = await Category.findOne({
-        name: { $regex: new RegExp(`^${categoryName}$`, 'i') }
+        name: { $regex: new RegExp(`^${categoryName}$`, "i") },
       });
 
       if (existingCategory) {
@@ -900,17 +907,24 @@ class ProgramController {
       // Create new category
       const newCategory = await Category.create({
         name: categoryName,
-        createdBy: req.user.id
+        createdBy: req.user.id,
       });
 
       // Get all categories
-      const allCategories = await Category.find({ isActive: true }).sort({ name: 1 });
-      const categoryNames = allCategories.map(cat => cat.name);
+      const allCategories = await Category.find({ isActive: true }).sort({
+        name: 1,
+      });
+      const categoryNames = allCategories.map((cat) => cat.name);
 
-      return handleSuccess(res, 201, {
-        category: newCategory.name,
-        allCategories: categoryNames
-      }, "Category added successfully");
+      return handleSuccess(
+        res,
+        201,
+        {
+          category: newCategory.name,
+          allCategories: categoryNames,
+        },
+        "Category added successfully"
+      );
     } catch (error) {
       console.error("Add category error:", error);
       return handleError(res, 500, "Failed to add category", error);

@@ -14,7 +14,7 @@ class FileController {
 
       const { programId } = req.params;
       const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
-      
+
       const fileInfo = {
         filename: req.file.filename,
         originalName: req.file.originalname,
@@ -23,7 +23,7 @@ class FileController {
         mimetype: req.file.mimetype,
         url: `/api/files/documents/${req.file.filename}`,
         uploadedAt: new Date(),
-        metadata
+        metadata,
       };
 
       // If programId is provided, add to program's documentation
@@ -38,7 +38,7 @@ class FileController {
           content: metadata.description || "",
           fileUrl: fileInfo.url,
           type: getFileType(req.file.originalname),
-          uploadedAt: new Date()
+          uploadedAt: new Date(),
         };
 
         program.documentation.push(documentEntry);
@@ -55,7 +55,7 @@ class FileController {
           url: fileInfo.url,
           originalName: req.file.originalname,
           size: req.file.size,
-          type: getFileType(req.file.originalname)
+          type: getFileType(req.file.originalname),
         },
         "File uploaded successfully"
       );
@@ -79,7 +79,7 @@ class FileController {
         size: req.file.size,
         mimetype: req.file.mimetype,
         url: `/api/files/profiles/${req.file.filename}`,
-        uploadedAt: new Date()
+        uploadedAt: new Date(),
       };
 
       return handleSuccess(
@@ -89,7 +89,7 @@ class FileController {
           id: req.file.filename,
           url: fileInfo.url,
           originalName: req.file.originalname,
-          size: req.file.size
+          size: req.file.size,
         },
         "Profile picture uploaded successfully"
       );
@@ -103,11 +103,11 @@ class FileController {
   static async serveFile(req, res) {
     try {
       const { type, filename } = req.params;
-      
+
       let filePath;
-      if (type === 'profiles') {
+      if (type === "profiles") {
         filePath = path.join(process.cwd(), "storage", "profiles", filename);
-      } else if (type === 'documents') {
+      } else if (type === "documents") {
         filePath = path.join(process.cwd(), "storage", "documents", filename);
       } else {
         return handleError(res, 400, "Invalid file type");
@@ -130,13 +130,23 @@ class FileController {
   static async deleteFile(req, res) {
     try {
       const { fileId } = req.params;
-      
+
       // Try to find and delete from both directories
-      const profilePath = path.join(process.cwd(), "storage", "profiles", fileId);
-      const documentPath = path.join(process.cwd(), "storage", "documents", fileId);
-      
+      const profilePath = path.join(
+        process.cwd(),
+        "storage",
+        "profiles",
+        fileId
+      );
+      const documentPath = path.join(
+        process.cwd(),
+        "storage",
+        "documents",
+        fileId
+      );
+
       let deletedPath = null;
-      
+
       if (fs.existsSync(profilePath)) {
         fs.unlinkSync(profilePath);
         deletedPath = profilePath;
@@ -165,19 +175,29 @@ class FileController {
   static async getFileInfo(req, res) {
     try {
       const { fileId } = req.params;
-      
-      const profilePath = path.join(process.cwd(), "storage", "profiles", fileId);
-      const documentPath = path.join(process.cwd(), "storage", "documents", fileId);
-      
+
+      const profilePath = path.join(
+        process.cwd(),
+        "storage",
+        "profiles",
+        fileId
+      );
+      const documentPath = path.join(
+        process.cwd(),
+        "storage",
+        "documents",
+        fileId
+      );
+
       let filePath = null;
       let fileType = null;
-      
+
       if (fs.existsSync(profilePath)) {
         filePath = profilePath;
-        fileType = 'profile';
+        fileType = "profile";
       } else if (fs.existsSync(documentPath)) {
         filePath = documentPath;
-        fileType = 'document';
+        fileType = "document";
       } else {
         return handleError(res, 404, "File not found");
       }
@@ -189,7 +209,7 @@ class FileController {
         size: stats.size,
         createdAt: stats.birthtime,
         modifiedAt: stats.mtime,
-        url: `/api/files/${fileType}s/${fileId}`
+        url: `/api/files/${fileType}s/${fileId}`,
       };
 
       return handleSuccess(
@@ -208,14 +228,14 @@ class FileController {
 // Helper function to determine file type
 const getFileType = (filename) => {
   const extension = path.extname(filename).toLowerCase();
-  if (['.pdf'].includes(extension)) return 'pdf';
-  if (['.doc', '.docx'].includes(extension)) return 'doc';
-  if (['.mp4', '.avi', '.mov'].includes(extension)) return 'video';
-  if (['.jpg', '.jpeg', '.png', '.gif'].includes(extension)) return 'image';
-  if (['.txt', '.md'].includes(extension)) return 'text';
-  if (['.ppt', '.pptx'].includes(extension)) return 'presentation';
-  if (['.xls', '.xlsx'].includes(extension)) return 'spreadsheet';
-  return 'text';
+  if ([".pdf"].includes(extension)) return "pdf";
+  if ([".doc", ".docx"].includes(extension)) return "doc";
+  if ([".mp4", ".avi", ".mov"].includes(extension)) return "video";
+  if ([".jpg", ".jpeg", ".png", ".gif"].includes(extension)) return "image";
+  if ([".txt", ".md"].includes(extension)) return "text";
+  if ([".ppt", ".pptx"].includes(extension)) return "presentation";
+  if ([".xls", ".xlsx"].includes(extension)) return "spreadsheet";
+  return "text";
 };
 
 export default FileController;

@@ -313,11 +313,7 @@ class QuizController {
   // Create program with exam simulator
   static async createProgramWithQuiz(req, res) {
     try {
-      const {
-        programData,
-        examSimulator,
-        guidedQuestions,
-      } = req.body;
+      const { programData, examSimulator, guidedQuestions } = req.body;
 
       const userId = req.user.id;
 
@@ -344,15 +340,15 @@ class QuizController {
 
       devLog(`Program created: ${program._id} by user: ${userId}`);
 
-      return handleSuccess(
-        res,
-        201,
-        program,
-        "Program created successfully"
-      );
+      return handleSuccess(res, 201, program, "Program created successfully");
     } catch (error) {
       devLog(`Create program with quiz error: ${error.message}`);
-      return handleError(res, 500, "Failed to create program with exam simulator", error);
+      return handleError(
+        res,
+        500,
+        "Failed to create program with exam simulator",
+        error
+      );
     }
   }
 
@@ -386,7 +382,12 @@ class QuizController {
       );
     } catch (error) {
       devLog(`Update program exam simulator error: ${error.message}`);
-      return handleError(res, 500, "Failed to update program exam simulator", error);
+      return handleError(
+        res,
+        500,
+        "Failed to update program exam simulator",
+        error
+      );
     }
   }
 
@@ -416,7 +417,8 @@ class QuizController {
       ]);
 
       const averageScore = avgScore.length > 0 ? avgScore[0].avgScore : 0;
-      const completionRate = totalAttempts > 0 ? (completedAttempts / totalAttempts) * 100 : 0;
+      const completionRate =
+        totalAttempts > 0 ? (completedAttempts / totalAttempts) * 100 : 0;
 
       const stats = {
         totalQuizzes,
@@ -436,7 +438,12 @@ class QuizController {
       );
     } catch (error) {
       devLog(`Get dashboard quiz stats error: ${error.message}`);
-      return handleError(res, 500, "Failed to retrieve quiz dashboard statistics", error);
+      return handleError(
+        res,
+        500,
+        "Failed to retrieve quiz dashboard statistics",
+        error
+      );
     }
   }
 }

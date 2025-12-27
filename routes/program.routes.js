@@ -17,7 +17,12 @@ router.post("/:id/enroll", authenticate, ProgramController.enrollInProgram);
 
 // Admin/Instructor routes
 router.post("/", authenticate, ProgramController.createProgram);
-router.post("/categories", authenticate, authorizeAdmin, ProgramController.addCategory); // Add new category (admin only)
+router.post(
+  "/categories",
+  authenticate,
+  authorizeAdmin,
+  ProgramController.addCategory
+); // Add new category (admin only)
 router.put("/:id", authenticate, ProgramController.updateProgram);
 router.delete(
   "/:id",

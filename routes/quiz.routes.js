@@ -24,15 +24,35 @@ router.delete("/:id", authenticate, authorizeAdmin, QuizController.deleteQuiz);
 router.get("/program/:programId", QuizController.getQuizzesByProgram);
 
 // Get quiz statistics
-router.get("/:id/statistics", authenticate, authorizeAdmin, QuizController.getQuizStatistics);
+router.get(
+  "/:id/statistics",
+  authenticate,
+  authorizeAdmin,
+  QuizController.getQuizStatistics
+);
 
 // Create program with exam simulator
-router.post("/program-with-quiz", authenticate, authorizeAdmin, QuizController.createProgramWithQuiz);
+router.post(
+  "/program-with-quiz",
+  authenticate,
+  authorizeAdmin,
+  QuizController.createProgramWithQuiz
+);
 
 // Update program exam simulator
-router.put("/program/:programId/exam-simulator", authenticate, authorizeAdmin, QuizController.updateProgramExamSimulator);
+router.put(
+  "/program/:programId/exam-simulator",
+  authenticate,
+  authorizeAdmin,
+  QuizController.updateProgramExamSimulator
+);
 
 // Get dashboard quiz statistics for admin
-router.get("/admin/dashboard-stats", authenticate, authorizeAdmin, QuizController.getDashboardQuizStats);
+router.get(
+  "/admin/dashboard-stats",
+  authenticate,
+  authorizeAdmin,
+  QuizController.getDashboardQuizStats
+);
 
 export default router;

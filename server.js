@@ -42,16 +42,18 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log("✅ MongoDB Connected Successfully");
-    
+
     // One-time migration: Drop the unique index on program name
     try {
-      await mongoose.connection.db.collection('programs').dropIndex('name_1');
-      console.log('✅ Dropped unique index on program name');
+      await mongoose.connection.db.collection("programs").dropIndex("name_1");
+      console.log("✅ Dropped unique index on program name");
     } catch (error) {
-      if (error.code === 27 || error.message.includes('index not found')) {
-        console.log('ℹ️ Unique index on program name already removed or does not exist');
+      if (error.code === 27 || error.message.includes("index not found")) {
+        console.log(
+          "ℹ️ Unique index on program name already removed or does not exist"
+        );
       } else {
-        console.log('⚠️ Note: Could not drop index:', error.message);
+        console.log("⚠️ Note: Could not drop index:", error.message);
       }
     }
   })
