@@ -177,18 +177,53 @@ const programSchema = new mongoose.Schema(
       ],
     },
 
-    // Documentation/Resources
-    documentation: [
-      {
-        title: String,
-        content: String,
-        fileUrl: String,
-        type: {
-          type: String,
-          enum: ["pdf", "doc", "video", "link", "text"],
+    // Documentation/Resources - Free and Premium sections
+    documentation: {
+      free: [
+        {
+          title: {
+            type: String,
+            required: true,
+          },
+          description: String,
+          type: {
+            type: String,
+            enum: ["pdf", "video", "youtube", "google-slides", "link"],
+            required: true,
+          },
+          fileUrl: String, // For uploaded files
+          externalUrl: String, // For YouTube, Google Slides, etc.
+          fileName: String,
+          fileSize: Number,
+          uploadedAt: {
+            type: Date,
+            default: Date.now,
+          },
         },
-      },
-    ],
+      ],
+      premium: [
+        {
+          title: {
+            type: String,
+            required: true,
+          },
+          description: String,
+          type: {
+            type: String,
+            enum: ["pdf", "video", "youtube", "google-slides", "link"],
+            required: true,
+          },
+          fileUrl: String, // For uploaded files
+          externalUrl: String, // For YouTube, Google Slides, etc.
+          fileName: String,
+          fileSize: Number,
+          uploadedAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+    },
 
     // Statistics
     stats: {

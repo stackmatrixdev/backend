@@ -2,6 +2,10 @@ import express from "express";
 import ProgramController from "../controllers/programController.js";
 import authenticate from "../middleware/authenticate.js";
 import authorizeAdmin from "../middleware/authorizeAdmin.js";
+import {
+  uploadDocument,
+  optionalDocumentUpload,
+} from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -14,6 +18,24 @@ router.get("/:id/preview", ProgramController.getProgramPreview);
 
 // Protected routes (authenticated users)
 router.post("/:id/enroll", authenticate, ProgramController.enrollInProgram);
+
+// Document routes
+router.get(
+  "/:id/documents",
+  authenticate,
+  ProgramController.getProgramDocuments
+);
+router.post(
+  "/:id/documents",
+  authenticate,
+  optionalDocumentUpload, // Use optional upload middleware that allows requests without files
+  ProgramController.addDocument
+);
+router.delete(
+  "/:id/documents/:documentId",
+  authenticate,
+  ProgramController.deleteDocument
+);
 
 // Admin/Instructor routes
 router.post("/", authenticate, ProgramController.createProgram);

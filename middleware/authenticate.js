@@ -17,7 +17,19 @@ const authenticate = async (req, res, next) => {
       token = req.cookies.token;
     }
 
+    console.log("🔐 [Auth] Checking authentication...");
+    console.log(
+      "📋 [Auth] Headers:",
+      req.headers.authorization ? "Present" : "Missing"
+    );
+    console.log(
+      "🍪 [Auth] Cookie token:",
+      req.cookies?.token ? "Present" : "Missing"
+    );
+    console.log("🎫 [Auth] Token:", token ? "Found" : "Not found");
+
     if (!token) {
+      console.log("❌ [Auth] No token provided");
       return res.status(401).json({
         success: false,
         message: "Not authorized to access this resource",
@@ -27,11 +39,13 @@ const authenticate = async (req, res, next) => {
     try {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("✅ [Auth] Token verified for user:", decoded.id);
 
       // Get user from token
       const user = await User.findById(decoded.id).select("-password ");
 
       if (!user) {
+        console.log("❌ [Auth] User not found in database");
         return res.status(401).json({
           success: false,
           message: "No user found with this token",
@@ -40,6 +54,7 @@ const authenticate = async (req, res, next) => {
 
       // Check if user is active
       if (!user.isActive) {
+        console.log("❌ [Auth] User account is deactivated");
         return res.status(401).json({
           success: false,
           message: "Account is deactivated",
@@ -49,9 +64,11 @@ const authenticate = async (req, res, next) => {
       // Add user to request
       req.user = user;
       req.user.id = user._id; // Ensure req.user.id is set
+      console.log("✅ [Auth] Authentication successful for:", user.email);
       devLog("Authenticated user:", req.user.id);
       next();
     } catch (error) {
+      console.log("❌ [Auth] Token verification failed:", error.message);
       return res.status(401).json({
         success: false,
         message: "Not authorized to access this resource",

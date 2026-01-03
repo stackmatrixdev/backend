@@ -1,5 +1,7 @@
 import Topic from "../models/Topic.model.js";
 import { handleError, handleSuccess } from "../utils/handleResponse.js";
+import fs from "fs";
+import path from "path";
 
 class TopicController {
   // Create a new topic
@@ -15,11 +17,11 @@ class TopicController {
         examSimulatorPrice,
         bundlePrice,
         overview,
-        coverImage,
       } = req.body;
 
       console.log("=== CREATE TOPIC DEBUG ===");
       console.log("Request body:", req.body);
+      console.log("Uploaded file:", req.file);
 
       // Validate required fields
       if (!title || !description || !category || !overview) {
@@ -40,6 +42,11 @@ class TopicController {
         );
       }
 
+      // Get the uploaded file path if present
+      const coverImage = req.file
+        ? `/storage/courses/${req.file.filename}`
+        : null;
+
       // Create topic data
       const topicData = {
         title,
@@ -54,7 +61,7 @@ class TopicController {
           currency: "CAD",
         },
         overview,
-        coverImage: coverImage || null,
+        coverImage,
         createdBy: req.user.id,
         status: "draft",
       };
@@ -148,6 +155,27 @@ class TopicController {
 
       if (ownerId && ownerId !== requesterId && requesterRole !== "admin") {
         return handleError(res, 403, "Not authorized to update this topic");
+      }
+
+      // Handle uploaded course image
+      if (req.file) {
+        const newCoverImage = `/storage/courses/${req.file.filename}`;
+        
+        // Delete old image file if exists
+        if (topic.coverImage) {
+          try {
+            const oldImagePath = path.join(process.cwd(), topic.coverImage);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+              console.log(`Deleted old topic image: ${topic.coverImage}`);
+            }
+          } catch (error) {
+            console.error(`Failed to delete old topic image:`, error);
+            // Continue even if deletion fails
+          }
+        }
+        
+        updates.coverImage = newCoverImage;
       }
 
       // Whitelist updatable fields

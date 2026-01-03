@@ -3,6 +3,7 @@
 import Program from "../models/Program.model.js";
 import Category from "../models/Category.model.js";
 import User from "../models/User.model.js";
+import Topic from "../models/Topic.model.js";
 import { handleError, handleSuccess } from "../utils/handleResponse.js";
 import { devLog } from "../utils/helper.js";
 
@@ -439,11 +440,38 @@ class ProgramController {
         .populate("instructor", "name bio expertise")
         .sort({ createdAt: -1 });
 
+      // Enrich programs with topic coverImage if program doesn't have one
+      const enrichedPrograms = await Promise.all(
+        programs.map(async (program) => {
+          const programObj = program.toObject();
+
+          // If program doesn't have a coverImage, try to get it from the topic
+          if (!programObj.coverImage && programObj.topic) {
+            try {
+              const topic = await Topic.findOne({
+                title: programObj.topic,
+              }).select("coverImage");
+              if (topic && topic.coverImage) {
+                programObj.coverImage = topic.coverImage;
+                programObj.coverImageSource = "topic"; // Flag to indicate source
+              }
+            } catch (error) {
+              console.error(
+                `Failed to fetch topic image for ${programObj.topic}:`,
+                error
+              );
+            }
+          }
+
+          return programObj;
+        })
+      );
+
       return handleSuccess(
         res,
         200,
-        programs,
-        `Found ${programs.length} programs`
+        enrichedPrograms,
+        `Found ${enrichedPrograms.length} programs`
       );
     } catch (error) {
       devLog(`Get all programs error: ${error.message}`);
@@ -465,7 +493,31 @@ class ProgramController {
         return handleError(res, 404, "Program not found");
       }
 
-      return handleSuccess(res, 200, program, "Program retrieved successfully");
+      // Enrich program with topic coverImage if program doesn't have one
+      const programObj = program.toObject();
+      if (!programObj.coverImage && programObj.topic) {
+        try {
+          const topic = await Topic.findOne({ title: programObj.topic }).select(
+            "coverImage"
+          );
+          if (topic && topic.coverImage) {
+            programObj.coverImage = topic.coverImage;
+            programObj.coverImageSource = "topic";
+          }
+        } catch (error) {
+          console.error(
+            `Failed to fetch topic image for ${programObj.topic}:`,
+            error
+          );
+        }
+      }
+
+      return handleSuccess(
+        res,
+        200,
+        programObj,
+        "Program retrieved successfully"
+      );
     } catch (error) {
       devLog(`Get program error: ${error.message}`);
       return handleError(res, 500, "Failed to retrieve program", error);
@@ -956,6 +1008,184 @@ class ProgramController {
       });
     } catch (error) {
       return handleError(res, 500, "Debug failed", error);
+    }
+  }
+
+  // Add document to program (free or premium)
+  static async addDocument(req, res) {
+    try {
+      const { id } = req.params;
+      const { title, description, type, externalUrl, tier } = req.body; // tier = 'free' or 'premium'
+
+      const program = await Program.findById(id);
+      if (!program) {
+        return handleError(res, 404, "Program not found");
+      }
+
+      // Validate tier
+      if (!tier || (tier !== "free" && tier !== "premium")) {
+        return handleError(
+          res,
+          400,
+          "Document tier must be 'free' or 'premium'"
+        );
+      }
+
+      const documentData = {
+        title: title || "Untitled Document",
+        description,
+        type, // pdf, video, youtube, google-slides, link
+      };
+
+      // Handle uploaded file
+      if (req.file) {
+        documentData.fileUrl = `/storage/documents/${req.file.filename}`;
+        documentData.fileName = req.file.originalname;
+        documentData.fileSize = req.file.size;
+      }
+
+      // Handle external URL (YouTube, Google Slides, etc.)
+      if (externalUrl) {
+        documentData.externalUrl = externalUrl;
+      }
+
+      // Validate that we have either a file or external URL
+      if (!documentData.fileUrl && !documentData.externalUrl) {
+        return handleError(
+          res,
+          400,
+          "Either file upload or external URL is required"
+        );
+      }
+
+      documentData.uploadedAt = new Date();
+
+      // Initialize documentation object if it doesn't exist
+      if (!program.documentation) {
+        program.documentation = { free: [], premium: [] };
+      }
+      if (!program.documentation.free) program.documentation.free = [];
+      if (!program.documentation.premium) program.documentation.premium = [];
+
+      // Add to appropriate tier
+      if (tier === "free") {
+        program.documentation.free.push(documentData);
+      } else {
+        program.documentation.premium.push(documentData);
+      }
+
+      await program.save();
+
+      return handleSuccess(
+        res,
+        200,
+        program,
+        `Document added to ${tier} section successfully`
+      );
+    } catch (error) {
+      console.error("Add document error:", error);
+      return handleError(res, 500, "Failed to add document", error);
+    }
+  }
+
+  // Delete document from program
+  static async deleteDocument(req, res) {
+    try {
+      const { id, documentId } = req.params;
+      const { tier } = req.query; // tier = 'free' or 'premium'
+
+      const program = await Program.findById(id);
+      if (!program) {
+        return handleError(res, 404, "Program not found");
+      }
+
+      if (!tier || (tier !== "free" && tier !== "premium")) {
+        return handleError(
+          res,
+          400,
+          "Document tier must be specified as 'free' or 'premium'"
+        );
+      }
+
+      // Find and remove the document
+      const documents =
+        tier === "free"
+          ? program.documentation.free
+          : program.documentation.premium;
+      const documentIndex = documents.findIndex(
+        (doc) => doc._id.toString() === documentId
+      );
+
+      if (documentIndex === -1) {
+        return handleError(res, 404, "Document not found");
+      }
+
+      // Remove from array
+      documents.splice(documentIndex, 1);
+
+      await program.save();
+
+      return handleSuccess(res, 200, program, "Document deleted successfully");
+    } catch (error) {
+      console.error("Delete document error:", error);
+      return handleError(res, 500, "Failed to delete document", error);
+    }
+  }
+
+  // Get program documents (with access control)
+  static async getProgramDocuments(req, res) {
+    try {
+      const { id } = req.params;
+      const userId = req.user?.id;
+
+      const program = await Program.findById(id).select(
+        "documentation pricing"
+      );
+      if (!program) {
+        return handleError(res, 404, "Program not found");
+      }
+
+      // Always return free documents
+      const response = {
+        free: program.documentation?.free || [],
+        premium: [],
+        hasPremiumAccess: false,
+      };
+
+      // Check if user has access to premium documents
+      // For now, checking if program is free OR if user is enrolled
+      const user = await User.findById(userId);
+      const isEnrolled = user?.enrolledPrograms?.some(
+        (enrollment) => enrollment.program.toString() === id
+      );
+
+      const isProgramFree = program.pricing?.isFree;
+      const hasPremiumAccess = isProgramFree || isEnrolled;
+
+      if (hasPremiumAccess) {
+        response.premium = program.documentation?.premium || [];
+        response.hasPremiumAccess = true;
+      } else {
+        // Return locked info without URLs
+        response.premium = (program.documentation?.premium || []).map(
+          (doc) => ({
+            _id: doc._id,
+            title: doc.title,
+            type: doc.type,
+            locked: true,
+          })
+        );
+      }
+
+      return handleSuccess(
+        res,
+        200,
+        response,
+        "Documents retrieved successfully"
+      );
+    } catch (error) {
+      console.error("Get documents error:", error);
+      return handleError(res, 500, "Failed to retrieve documents", error);
     }
   }
 }
