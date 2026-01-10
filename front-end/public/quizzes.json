@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "name": "Development",
+    "topic": "Web Development",
+    "questionsCount": 20,
+    "marks": 30,
+    "duration": 60,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 2,
+    "name": "Business",
+    "topic": "Data Science",
+    "questionsCount": 14,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 3,
+    "name": "Marketing",
+    "topic": "Mobile Development",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 40,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 4,
+    "name": "Lifestyle",
+    "topic": "Programming Languages",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Draft"
+  },
+  {
+    "id": 5,
+    "name": "Music",
+    "topic": "Game Development",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 35,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 6,
+    "name": "Design",
+    "topic": "Web Development",
+    "questionsCount": 20,
+    "marks": 30,
+    "duration": 30,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 7,
+    "name": "Academics",
+    "topic": "Data Science",
+    "questionsCount": 14,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 8,
+    "name": "Health & fitness",
+    "topic": "Mobile Development",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  },
+  {
+    "id": 9,
+    "name": "Productivity",
+    "topic": "Programming Languages",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Draft"
+  },
+  {
+    "id": 10,
+    "name": "Accounting",
+    "topic": "Game Development",
+    "questionsCount": 10,
+    "marks": 30,
+    "duration": 45,
+    "attempts": 234,
+    "avgScore": 78,
+    "status": "Active"
+  }
+]

@@ -1,0 +1,23 @@
+/* Adjust circle positioning and ensure correct z-index */
+.absolute-circle {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: -1; /* Make sure they stay behind the content */
+}
+
+.top-circle {
+  top: -10%; /* Adjust top position as needed */
+  right: -10%;
+  width: 320px;
+  height: 320px;
+  border: 10px solid rgba(0, 0, 0, 0.1);
+}
+
+.bottom-circle {
+  bottom: -10%; /* Adjust bottom position as needed */
+  right: -10%;
+  width: 320px;
+  height: 320px;
+  border: 10px solid rgba(0, 0, 0, 0.1);
+}

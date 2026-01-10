@@ -1,0 +1,6 @@
+.active {
+  color: white !important;
+  font-weight: bold;
+  position: relative;
+  background: linear-gradient(to right, #1e90ff, #0e5f98);
+}

@@ -1,0 +1,3 @@
+PROJECT OVERVIEW
+This project involves the development of a responsive, AI-powered web platform designed to help users prepare for exams through an interactive quiz simulator and a smart AI assistant. Users will be able to register, log in, and access a secure dashboard where they can take timed quizzes, review performance, and track progress. The admin will have control over user management and quiz content. An integrated AI assistant, powered by an open-source model like Mistral or GPT-J, will provide helpful explanations and learning support based on quiz material. The platform will be scalable and mobile-friendly, allowing for future extension into a companion mobile app.
+# backend-only
