@@ -4,6 +4,7 @@ import Program from "../models/Program.model.js";
 import Category from "../models/Category.model.js";
 import User from "../models/User.model.js";
 import Topic from "../models/Topic.model.js";
+import CoursePurchase from "../models/CoursePurchase.model.js";
 import { handleError, handleSuccess } from "../utils/handleResponse.js";
 import { devLog } from "../utils/helper.js";
 
@@ -1017,13 +1018,25 @@ class ProgramController {
       const { id } = req.params;
       const { title, description, type, externalUrl, tier } = req.body; // tier = 'free' or 'premium'
 
+      console.log("📤 [addDocument] ===== UPLOAD START =====");
+      console.log("📤 [addDocument] Program ID:", id);
+      console.log("📤 [addDocument] Title:", title);
+      console.log("📤 [addDocument] Type:", type);
+      console.log("📤 [addDocument] Tier:", tier);
+      console.log("📤 [addDocument] Has file:", !!req.file);
+      console.log("📤 [addDocument] Has external URL:", !!externalUrl);
+
       const program = await Program.findById(id);
       if (!program) {
+        console.log("❌ [addDocument] Program not found");
         return handleError(res, 404, "Program not found");
       }
 
+      console.log("✅ [addDocument] Program found:", program.title);
+
       // Validate tier
       if (!tier || (tier !== "free" && tier !== "premium")) {
+        console.log("❌ [addDocument] Invalid tier:", tier);
         return handleError(
           res,
           400,
@@ -1042,15 +1055,18 @@ class ProgramController {
         documentData.fileUrl = `/storage/documents/${req.file.filename}`;
         documentData.fileName = req.file.originalname;
         documentData.fileSize = req.file.size;
+        console.log("📁 [addDocument] File uploaded:", req.file.filename);
       }
 
       // Handle external URL (YouTube, Google Slides, etc.)
       if (externalUrl) {
         documentData.externalUrl = externalUrl;
+        console.log("🔗 [addDocument] External URL:", externalUrl);
       }
 
       // Validate that we have either a file or external URL
       if (!documentData.fileUrl && !documentData.externalUrl) {
+        console.log("❌ [addDocument] No file or URL provided");
         return handleError(
           res,
           400,
@@ -1060,21 +1076,47 @@ class ProgramController {
 
       documentData.uploadedAt = new Date();
 
+      console.log("📋 [addDocument] Document data prepared:", documentData);
+
       // Initialize documentation object if it doesn't exist
       if (!program.documentation) {
+        console.log("⚠️ [addDocument] Initializing documentation object");
         program.documentation = { free: [], premium: [] };
       }
       if (!program.documentation.free) program.documentation.free = [];
       if (!program.documentation.premium) program.documentation.premium = [];
 
+      console.log(
+        "📊 [addDocument] Before save - Free docs:",
+        program.documentation.free.length
+      );
+      console.log(
+        "📊 [addDocument] Before save - Premium docs:",
+        program.documentation.premium.length
+      );
+
       // Add to appropriate tier
       if (tier === "free") {
         program.documentation.free.push(documentData);
+        console.log("➕ [addDocument] Added to FREE tier");
       } else {
         program.documentation.premium.push(documentData);
+        console.log("➕ [addDocument] Added to PREMIUM tier");
       }
 
+      console.log(
+        "📊 [addDocument] After push - Free docs:",
+        program.documentation.free.length
+      );
+      console.log(
+        "📊 [addDocument] After push - Premium docs:",
+        program.documentation.premium.length
+      );
+
       await program.save();
+
+      console.log("💾 [addDocument] Program saved successfully");
+      console.log("📤 [addDocument] ===== UPLOAD END =====");
 
       return handleSuccess(
         res,
@@ -1138,12 +1180,26 @@ class ProgramController {
       const { id } = req.params;
       const userId = req.user?.id;
 
+      console.log("📚 [getProgramDocuments] Program ID:", id);
+      console.log("📚 [getProgramDocuments] User ID:", userId);
+
       const program = await Program.findById(id).select(
         "documentation pricing"
       );
       if (!program) {
+        console.log("❌ [getProgramDocuments] Program not found");
         return handleError(res, 404, "Program not found");
       }
+
+      console.log("📚 [getProgramDocuments] Program found");
+      console.log(
+        "📚 [getProgramDocuments] Free docs count:",
+        program.documentation?.free?.length || 0
+      );
+      console.log(
+        "📚 [getProgramDocuments] Premium docs count:",
+        program.documentation?.premium?.length || 0
+      );
 
       // Always return free documents
       const response = {
@@ -1153,14 +1209,41 @@ class ProgramController {
       };
 
       // Check if user has access to premium documents
-      // For now, checking if program is free OR if user is enrolled
+      // Check: 1) Program is free, 2) User enrolled, 3) User purchased documentation access
       const user = await User.findById(userId);
       const isEnrolled = user?.enrolledPrograms?.some(
         (enrollment) => enrollment.program.toString() === id
       );
 
+      // Check if user has purchased documentation access
+      let hasPurchased = false;
+      if (userId) {
+        hasPurchased = await CoursePurchase.hasAccess(
+          userId,
+          id,
+          "documentation"
+        );
+      }
+
+      console.log("📚 [getProgramDocuments] User enrolled:", isEnrolled);
+      console.log("📚 [getProgramDocuments] User purchased:", hasPurchased);
+
       const isProgramFree = program.pricing?.isFree;
-      const hasPremiumAccess = isProgramFree || isEnrolled;
+      const hasPremiumAccess = isProgramFree || isEnrolled || hasPurchased;
+
+      console.log("📚 [getProgramDocuments] Program is free:", isProgramFree);
+      console.log(
+        "📚 [getProgramDocuments] Has premium access:",
+        hasPremiumAccess
+      );
+
+      // Add pricing info to response for frontend
+      response.pricing = {
+        isFree: isProgramFree,
+        documentationPrice: program.pricing?.documentationPrice || 19.99,
+        fullAccessPrice: program.pricing?.fullAccessPrice || 29.99,
+        currency: program.pricing?.currency || "CAD",
+      };
 
       if (hasPremiumAccess) {
         response.premium = program.documentation?.premium || [];
@@ -1172,10 +1255,16 @@ class ProgramController {
             _id: doc._id,
             title: doc.title,
             type: doc.type,
+            description: doc.description,
             locked: true,
           })
         );
       }
+
+      console.log("📚 [getProgramDocuments] Returning response:");
+      console.log("   - Free docs:", response.free.length);
+      console.log("   - Premium docs:", response.premium.length);
+      console.log("   - Premium access:", response.hasPremiumAccess);
 
       return handleSuccess(
         res,
@@ -1186,6 +1275,43 @@ class ProgramController {
     } catch (error) {
       console.error("Get documents error:", error);
       return handleError(res, 500, "Failed to retrieve documents", error);
+    }
+  }
+
+  // Get program pricing information
+  static async getProgramPricing(req, res) {
+    try {
+      const { id } = req.params;
+
+      const program = await Program.findById(id).select("name pricing");
+
+      if (!program) {
+        return handleError(res, 404, "Program not found");
+      }
+
+      const pricingInfo = {
+        title: program.name,
+        isFree: program.pricing?.isFree || false,
+        price:
+          program.pricing?.price ||
+          program.pricing?.documentationPrice ||
+          29.99,
+        documentationPrice: program.pricing?.documentationPrice || 19.99,
+        aiCoachPrice: program.pricing?.aiCoachPrice || 19.99,
+        examSimulatorPrice: program.pricing?.examSimulatorPrice || 19.99,
+        fullAccessPrice: program.pricing?.fullAccessPrice || 29.99,
+        currency: program.pricing?.currency || "CAD",
+      };
+
+      return handleSuccess(
+        res,
+        200,
+        pricingInfo,
+        "Pricing retrieved successfully"
+      );
+    } catch (error) {
+      console.error("Get pricing error:", error);
+      return handleError(res, 500, "Failed to retrieve pricing", error);
     }
   }
 }

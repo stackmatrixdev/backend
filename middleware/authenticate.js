@@ -82,4 +82,60 @@ const authenticate = async (req, res, next) => {
   }
 };
 
+// Optional authentication - doesn't fail if no token, just sets req.user if valid token exists
+export const optionalAuthenticate = async (req, res, next) => {
+  try {
+    let token;
+
+    // Check for token in Authorization header
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+    // Check for token in cookies
+    else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    }
+
+    console.log("🔓 [OptionalAuth] Checking optional authentication...");
+
+    if (!token) {
+      console.log(
+        "ℹ️ [OptionalAuth] No token provided - continuing without auth"
+      );
+      req.user = null;
+      return next();
+    }
+
+    try {
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("✅ [OptionalAuth] Token verified for user:", decoded.id);
+
+      // Get user from token
+      const user = await User.findById(decoded.id).select("-password");
+
+      if (user && user.isActive) {
+        req.user = user;
+        req.user.id = user._id;
+        console.log("✅ [OptionalAuth] User authenticated:", user.email);
+      } else {
+        console.log("⚠️ [OptionalAuth] User not found or inactive");
+        req.user = null;
+      }
+    } catch (error) {
+      console.log("⚠️ [OptionalAuth] Token invalid or expired:", error.message);
+      req.user = null;
+    }
+
+    next();
+  } catch (error) {
+    console.log("⚠️ [OptionalAuth] Error:", error.message);
+    req.user = null;
+    next();
+  }
+};
+
 export default authenticate;

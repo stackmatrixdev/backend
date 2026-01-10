@@ -29,8 +29,17 @@ import reviewRoutes from "./routes/review.routes.js";
 import topicRoutes from "./routes/topic.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import fileRoutes from "./routes/file.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import PaymentController from "./controllers/paymentController.js";
 
 const app = express();
+
+// Stripe webhook needs raw body - must be before express.json()
+app.post(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" }),
+  PaymentController.handleWebhook
+);
 
 // Middleware
 app.use(
@@ -86,6 +95,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/topics", topicRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Ck server running
 app.get("/", (req, res) => {

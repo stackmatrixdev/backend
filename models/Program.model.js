@@ -282,6 +282,23 @@ const programSchema = new mongoose.Schema(
         type: String,
         default: "CAD",
       },
+      // Individual access pricing
+      documentationPrice: {
+        type: Number,
+        default: 19.99,
+      },
+      aiCoachPrice: {
+        type: Number,
+        default: 19.99,
+      },
+      examSimulatorPrice: {
+        type: Number,
+        default: 19.99,
+      },
+      fullAccessPrice: {
+        type: Number,
+        default: 29.99,
+      },
     },
 
     // Status

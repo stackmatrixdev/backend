@@ -1,6 +1,8 @@
 import express from "express";
 import ProgramController from "../controllers/programController.js";
-import authenticate from "../middleware/authenticate.js";
+import authenticate, {
+  optionalAuthenticate,
+} from "../middleware/authenticate.js";
 import authorizeAdmin from "../middleware/authorizeAdmin.js";
 import {
   uploadDocument,
@@ -15,6 +17,7 @@ router.get("/categories", ProgramController.getCategories); // Get available cat
 router.get("/search", ProgramController.getAllPrograms); // Same as getAllPrograms with filters
 router.get("/:id", ProgramController.getProgram);
 router.get("/:id/preview", ProgramController.getProgramPreview);
+router.get("/:id/pricing", ProgramController.getProgramPricing); // Get pricing info
 
 // Protected routes (authenticated users)
 router.post("/:id/enroll", authenticate, ProgramController.enrollInProgram);
@@ -22,7 +25,7 @@ router.post("/:id/enroll", authenticate, ProgramController.enrollInProgram);
 // Document routes
 router.get(
   "/:id/documents",
-  authenticate,
+  optionalAuthenticate,
   ProgramController.getProgramDocuments
 );
 router.post(
